@@ -9,6 +9,7 @@
     ../../modules/hardware.nix
     ../../modules/desktop.nix
     ../../modules/packages.nix
+    ../../modules/services.nix
     ../../modules/users.nix
   ];
 

@@ -47,8 +47,12 @@
     slurp
     grim
     github-cli
+    fd
+    sesh
+    television
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww
     inputs.workmux.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }

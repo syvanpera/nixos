@@ -1,6 +1,6 @@
 # NixOS configuration
 
-Tuomo's personal NixOS setup, as a flake. One host (`tuxedo`), a handful of
+My personal NixOS setup, as a flake. One host (`tuxedo`), a handful of
 shared modules, no home-manager — everything lives at the system level.
 
 ## Layout

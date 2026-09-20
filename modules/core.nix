@@ -4,6 +4,13 @@
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # Collect garbage weekly so old generations do not pile up.
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 2d";
+  };
+
   # Enable networking
   networking.networkmanager.enable = true;
 

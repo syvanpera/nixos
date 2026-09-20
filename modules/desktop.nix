@@ -12,6 +12,8 @@
 
   programs.localsend.enable = true;
 
+  programs.ydotool.enable = true;
+
   programs.chromium = {
     enable = true;
     extensions = [

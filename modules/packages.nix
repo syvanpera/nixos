@@ -50,6 +50,7 @@
     fd
     sesh
     television
+    wtype
     imagemagick
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default

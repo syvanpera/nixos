@@ -5,7 +5,7 @@
   users.users."tuomo" = {
     isNormalUser = true;
     description = "Tuomo Syvänperä";
-    extraGroups = [ "networkmanager" "wheel" "uinput" ];
+    extraGroups = [ "networkmanager" "wheel" "uinput" "video" ];
     packages = with pkgs; [ ];
   };
 }

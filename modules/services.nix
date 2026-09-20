@@ -1,6 +1,9 @@
 # Systemd services
-{ pkgs, inputs, ... }:
+{ lib, pkgs, inputs, ... }:
 
+let
+  awww = inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww;
+in
 {
   systemd.user.services.awww-daemon = {
     enable = true;
@@ -9,7 +12,7 @@
     description = "An Answer to your Wayland Wallpaper Woes";
     serviceConfig = {
         Type = "simple";
-        ExecStart = ''/run/current-system/sw/bin/awww-daemon'';
+        ExecStart = lib.getExe' awww "awww-daemon";
     };
   };
 }

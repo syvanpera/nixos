@@ -16,6 +16,45 @@ in
     };
   };
 
+  # The desktop shell: the border, the notches and the launcher, and since it
+  # gained a polkit agent, the thing that answers authorisation prompts too.
+  #
+  # A unit rather than an exec-once in the Hyprland config, because it is now
+  # load-bearing: Restart=on-failure means a crash does not silently leave the
+  # session with no authentication agent, and the journal gets the output without
+  # wrapping anything in systemd-cat.
+  #
+  # The config path is the working copy on purpose -- this shell is developed in
+  # place. `-p` is not optional: ~/.config/quickshell holds an older copy and a
+  # bare quickshell would load that one.
+  systemd.user.services.kuori = {
+    enable = true;
+    description = "kuori desktop shell";
+    partOf = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    unitConfig.ConditionEnvironment = "WAYLAND_DISPLAY";
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${lib.getExe' pkgs.quickshell "quickshell"} -p /home/tuomo/work/personal/kuori";
+
+      # systemd hands a unit a minimal PATH -- coreutils, findutils, grep, sed,
+      # systemd -- and this one inherits nothing from the session. Started from
+      # hyprland the shell had the whole session PATH, so nothing needed saying;
+      # as a unit it lost uwsm (launching an app), nmcli (the wifi band and the
+      # IPv4 address), brightnessctl (naming the backlight) and ping, and each
+      # of those failures is silent: the launcher simply stops launching.
+      #
+      # The session's own directories rather than a list of store paths, so a
+      # tool the shell picks up later does not have to be added here too.
+      Environment = [ "PATH=/run/wrappers/bin:/run/current-system/sw/bin" ];
+
+      Slice = "session.slice";
+      TimeoutStopSec = "5sec";
+      Restart = "on-failure";
+    };
+  };
+
   # Polkit authentication agent for the Hyprland session. Without one running,
   # anything needing authorisation (`systemctl start ydotoold`, say) can only
   # be authorised by typing a password into a terminal; with it, the request
@@ -24,8 +63,13 @@ in
   # Declared here rather than via systemd.packages so the unit matches the
   # style above and pins the store path. Note ExecStart is under libexec/,
   # not bin/, so lib.getExe' does not apply.
+  #
+  # Disabled since the shell above became the session's agent: only one can
+  # register with the Authority at a time, and both being wanted by
+  # graphical-session.target would make it a race. Kept rather than deleted so
+  # that going back is one word.
   systemd.user.services.hyprpolkitagent = {
-    enable = true;
+    enable = false;
     description = "Hyprland Polkit Authentication Agent";
     partOf = [ "graphical-session.target" ];
     after = [ "graphical-session.target" ];

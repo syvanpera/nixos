@@ -17,7 +17,6 @@
     fsel
     ghostty
     chromium
-    hyprpaper
     hyprpolkitagent
     quickshell
     tree-sitter
@@ -39,7 +38,6 @@
     stylua
     claude-code
     mcp-nixos
-    hyprmon
     hyprmoncfg
     delta
     hunk

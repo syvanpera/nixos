@@ -51,6 +51,7 @@
     sesh
     television
     wtype
+    morewaita-icon-theme
     imagemagick
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default

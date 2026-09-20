@@ -76,8 +76,47 @@ in
     };
   };
 
+  # GTK icon theme, set system-wide (no home-manager).
+  #
+  # GTK apps query xdg-desktop-portal-gtk first, and that backend reads these
+  # GSettings keys out of dconf -- so the dconf default is what actually wins.
+  # Without it the portal hands back the schema default ("Adwaita"), which
+  # overrides anything coming from settings.ini.
+  programs.dconf.profiles.user.databases = [
+    {
+      settings."org/gnome/desktop/interface" = {
+        icon-theme = "MoreWaita";
+      };
+    }
+  ];
+
+  # Fallback for GTK apps that never reach the portal (no portal running, or a
+  # non-Wayland context). /etc/xdg is on XDG_CONFIG_DIRS, which is where GTK
+  # looks for the system-level settings.ini.
+  environment.etc = {
+    "xdg/gtk-3.0/settings.ini".text = ''
+      [Settings]
+      gtk-icon-theme-name=MoreWaita
+    '';
+    "xdg/gtk-4.0/settings.ini".text = ''
+      [Settings]
+      gtk-icon-theme-name=MoreWaita
+    '';
+  };
+
+  # Qt apps follow the GTK settings above, via the gtk3 platform theme plugin
+  # that qtbase already ships (libqgtk3.so, present for both qt5 and qt6). It
+  # reads gtk-icon-theme-name straight out of GtkSettings, so there's one
+  # source of truth rather than a parallel qt6ct config to keep in sync.
+  #
+  # qt.platformTheme is left null on purpose: the module's enum has no "gtk3"
+  # option, so QT_QPA_PLATFORMTHEME is set directly below. qt.enable is still
+  # wanted for the QT_PLUGIN_PATH / QML2_IMPORT_PATH it sets up.
+  qt.enable = true;
+
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
+    QT_QPA_PLATFORMTHEME = "gtk3";
     QML_IMPORT_PATH = "${pkgs.kdePackages.qtmultimedia}/lib/qt-6/qml:${pkgs.kdePackages.qtdeclarative}/lib/qt-6/qml";
     EDITOR = "nvim";
   };

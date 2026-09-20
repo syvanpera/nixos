@@ -17,7 +17,6 @@
     fsel
     ghostty
     chromium
-    hyprpolkitagent
     quickshell
     tree-sitter
     tmux

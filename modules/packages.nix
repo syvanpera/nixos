@@ -45,6 +45,7 @@
     lazygit
     slurp
     grim
+    grimblast
     github-cli
     fd
     sesh

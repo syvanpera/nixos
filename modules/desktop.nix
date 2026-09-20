@@ -1,5 +1,5 @@
 # Wayland compositors, display manager, keymap, fonts and session variables.
-{ pkgs, inputs, ... }:
+{ lib, pkgs, inputs, ... }:
 
 let
   # embeddedTheme picks which Themes/<name>.conf the theme's metadata.desktop
@@ -17,7 +17,29 @@ in
 
   programs.localsend.enable = true;
 
+  # ydotool synthesises input through a virtual device, so whatever can reach
+  # ydotoold's socket can type into whichever window has focus -- including a
+  # terminal holding a cached sudo timestamp. Keep that off by default: the
+  # socket is gated on the ydotool group (see users.nix) and the unit is
+  # dropped from multi-user.target, so the capability exists only between an
+  # explicit `systemctl start ydotoold` and the matching stop.
   programs.ydotool.enable = true;
+  systemd.services.ydotoold.wantedBy = lib.mkForce [ ];
+
+  # Each start of ydotoold is its own password prompt. The systemd action
+  # defaults to auth_admin_keep, which caches the approval as a temporary
+  # authorisation for the rest of the login session -- that would let anything
+  # running as the user re-open the capability silently once it had been
+  # granted the first time. AUTH_ADMIN drops the caching; the admin identity
+  # itself is unix-group:wheel, set by the NixOS default addAdminRule.
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (action.id == "org.freedesktop.systemd1.manage-units" &&
+          action.lookup("unit") == "ydotoold.service") {
+        return polkit.Result.AUTH_ADMIN;
+      }
+    });
+  '';
 
   programs.chromium = {
     enable = true;

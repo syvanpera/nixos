@@ -40,6 +40,10 @@
   # Configure console keymap
   console.keyMap = "fi";
 
+  # Never let uv download its own CPython: python-build-standalone binaries
+  # expect /lib64/ld-linux-x86-64.so.2, which does not exist on NixOS.
+  environment.variables.UV_PYTHON_DOWNLOADS = "never";
+
   # clear all default shell aliases
   environment.shellAliases = lib.mkForce { };
 

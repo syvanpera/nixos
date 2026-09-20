@@ -34,6 +34,8 @@
     bluetui
     unzip
     nodejs
+    python3
+    uv
     lua-language-server
     stylua
     claude-code

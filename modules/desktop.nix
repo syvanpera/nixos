@@ -1,6 +1,11 @@
 # Wayland compositors, display manager, keymap, fonts and session variables.
 { pkgs, inputs, ... }:
 
+let
+  # embeddedTheme picks which Themes/<name>.conf the theme's metadata.desktop
+  # points at. Variants ship in the same package; see Themes/ upstream.
+  sddm-astronaut = pkgs.sddm-astronaut.override { embeddedTheme = "pixel_sakura"; };
+in
 {
   programs.hyprland = {
     enable = true;
@@ -25,10 +30,24 @@
     sddm = {
       enable = true;
       wayland.enable = true;
+
+      # Theme name, not a path: the module points SDDM's ThemeDir at
+      # /run/current-system/sw/share/sddm/themes, which is why the theme
+      # package has to land in environment.systemPackages below.
+      theme = "sddm-astronaut-theme";
+
+      # The theme's QML pulls in qtsvg / qtmultimedia / qtvirtualkeyboard. The
+      # package only propagates those at build time, so hand them to the
+      # greeter's plugin path explicitly.
+      extraPackages = sddm-astronaut.propagatedBuildInputs;
     };
 
     defaultSession = "hyprland-uwsm";
   };
+
+  # Kept here rather than in packages.nix: this isn't a tool to use, it's only
+  # in the system profile because that's where SDDM looks for themes.
+  environment.systemPackages = [ sddm-astronaut ];
 
   # Configure keymap in X11
   services.xserver.xkb = {

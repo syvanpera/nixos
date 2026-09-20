@@ -13,6 +13,15 @@ in
     serviceConfig = {
         Type = "simple";
         ExecStart = lib.getExe' awww "awww-daemon";
+
+        # The daemon starts with no wallpaper -- it shows black until something
+        # tells it what to display -- and it already keeps its own cache of the
+        # last image per output, so restoring is its job rather than the shell's.
+        # It answers as soon as the process is up, so no waiting is needed here.
+        #
+        # Leading `-` because a machine that has never had a wallpaper set has
+        # nothing to restore, and that is not a failed start.
+        ExecStartPost = "-${lib.getExe' awww "awww"} restore";
     };
   };
 

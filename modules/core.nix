@@ -49,6 +49,8 @@
 
   programs.fish.enable = true;
 
+  services.power-profiles-daemon.enable = true;
+
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 }

@@ -15,6 +15,13 @@
 
   networking.hostName = "tuxedo";
 
+  # The discrete RTX 4050 (10de:28a0) is unused: there is no hardware.nvidia
+  # config, and its only output (DP-3) is not wired up -- the Intel GPU drives
+  # eDP, HDMI and both DisplayPorts. Left loaded, nouveau claims a lower card
+  # number than i915, and SDDM's weston greeter grabs that first card and dies
+  # on it, since nouveau cannot do atomic modesetting on Ada Lovelace.
+  boot.blacklistedKernelModules = [ "nouveau" ];
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;

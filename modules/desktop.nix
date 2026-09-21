@@ -5,6 +5,20 @@ let
   # embeddedTheme picks which Themes/<name>.conf the theme's metadata.desktop
   # points at. Variants ship in the same package; see Themes/ upstream.
   sddm-astronaut = pkgs.sddm-astronaut.override { embeddedTheme = "pixel_sakura"; };
+
+  # Hyprland draws its own built-in cursor unless it is pointed at a theme, and
+  # the name has to match a directory under one of the XCURSOR_PATH entries --
+  # /run/current-system/sw/share/icons is already on that path, which is what
+  # puts bibata-cursors in systemPackages below.
+  #
+  # Bibata ships XCursor only, no hyprcursors, so HYPRCURSOR_THEME is left unset
+  # on purpose: Hyprland falls back to the XCursor theme, and naming a
+  # hyprcursor theme that does not exist would only make it fall back anyway.
+  cursorTheme = "Bibata-Modern-Ice";
+
+  # The logical size. The display is 2560x1600 at scale 1.6, and the compositor
+  # scales the cursor with everything else, so this stays at the usual 24.
+  cursorSize = 24;
 in
 {
   programs.hyprland = {
@@ -67,9 +81,10 @@ in
     defaultSession = "hyprland-uwsm";
   };
 
-  # Kept here rather than in packages.nix: this isn't a tool to use, it's only
-  # in the system profile because that's where SDDM looks for themes.
-  environment.systemPackages = [ sddm-astronaut ];
+  # Kept here rather than in packages.nix: these aren't tools to use, they're
+  # only in the system profile because that's where SDDM looks for themes and
+  # where XCURSOR_PATH already points for cursors.
+  environment.systemPackages = [ sddm-astronaut pkgs.bibata-cursors ];
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -108,6 +123,8 @@ in
     {
       settings."org/gnome/desktop/interface" = {
         icon-theme = "MoreWaita";
+        cursor-theme = cursorTheme;
+        cursor-size = lib.gvariant.mkInt32 cursorSize;
       };
     }
   ];
@@ -119,10 +136,14 @@ in
     "xdg/gtk-3.0/settings.ini".text = ''
       [Settings]
       gtk-icon-theme-name=MoreWaita
+      gtk-cursor-theme-name=${cursorTheme}
+      gtk-cursor-theme-size=${toString cursorSize}
     '';
     "xdg/gtk-4.0/settings.ini".text = ''
       [Settings]
       gtk-icon-theme-name=MoreWaita
+      gtk-cursor-theme-name=${cursorTheme}
+      gtk-cursor-theme-size=${toString cursorSize}
     '';
 
     # Where the XDG user directories point. Nothing on this machine defined them
@@ -158,6 +179,13 @@ in
 
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
+
+    # Hyprland already exports XCURSOR_SIZE itself and uwsm finalizes both names
+    # into the systemd user environment, so the user units pick them up too.
+    # Setting the size here as well keeps Niri and any non-Hyprland session on
+    # the same value rather than on each compositor's own default.
+    XCURSOR_THEME = cursorTheme;
+    XCURSOR_SIZE = toString cursorSize;
     QT_QPA_PLATFORMTHEME = "gtk3";
     QML_IMPORT_PATH = "${pkgs.kdePackages.qtmultimedia}/lib/qt-6/qml:${pkgs.kdePackages.qtdeclarative}/lib/qt-6/qml";
     EDITOR = "nvim";

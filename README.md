@@ -89,7 +89,8 @@ All four follow the same `nixpkgs` as the system.
   on start.
 - **Fonts/icons:** Nerd Fonts plus SF Pro as the default sans, Manrope and
   Material Symbols; MoreWaita icons for both GTK and Qt (Qt follows GTK via
-  the `gtk3` platform theme).
+  the `gtk3` platform theme); Bibata Modern Ice cursors, set through
+  `XCURSOR_THEME` so Hyprland stops drawing its built-in one.
 - **Locale:** `en_US.UTF-8` with Finnish regional formats, `fi` console and
   X11 keymap (`nodeadkeys`), `Europe/Helsinki`.
 - **Audio/input:** PipeWire (ALSA + Pulse), Bluetooth with battery reporting,

@@ -41,6 +41,29 @@ in
     };
   };
 
+  # Night light. hyprsunset applies a colour temperature to the whole output and
+  # is controlled at runtime through hyprctl, which talks to a socket that only
+  # exists while the daemon does -- so it runs from login rather than being
+  # started by whatever wants to change the temperature.
+  #
+  # -i is the identity matrix: running, and changing nothing, until the shell
+  # says otherwise. Without it the daemon would apply its own 6000K default at
+  # every login, which is a colour change nobody asked for.
+  systemd.user.services.hyprsunset = {
+    enable = true;
+    description = "Colour temperature for the display";
+    partOf = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    unitConfig.ConditionEnvironment = "WAYLAND_DISPLAY";
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${lib.getExe pkgs.hyprsunset} -i";
+      Slice = "session.slice";
+      Restart = "on-failure";
+    };
+  };
+
   # Clipboard history. cliphist is a store, not a daemon: nothing is ever
   # recorded unless wl-paste watches the selection and feeds it, so this has to
   # be a session service. History collected only while a launcher is open would

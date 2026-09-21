@@ -124,6 +124,26 @@ in
       [Settings]
       gtk-icon-theme-name=MoreWaita
     '';
+
+    # Where the XDG user directories point. Nothing on this machine defined them
+    # before, so ~/.config/user-dirs.dirs did not exist and anything asking where
+    # to put a file fell back to $HOME. grimblast reads that file directly to
+    # decide where a screenshot goes, and kuori reads it for recordings.
+    #
+    # SCREENSHOTS is not one of the eight keys xdg-user-dirs manages, so it may
+    # be ignored here; screenshots then land in PICTURES, which is the fallback
+    # grimblast uses anyway.
+    "xdg/user-dirs.defaults".text = ''
+      DESKTOP=Desktop
+      DOWNLOAD=Downloads
+      TEMPLATES=Templates
+      PUBLICSHARE=Public
+      DOCUMENTS=Documents
+      MUSIC=Music
+      PICTURES=Pictures
+      VIDEOS=Videos
+      SCREENSHOTS=Pictures/Screenshots
+    '';
   };
 
   # Qt apps follow the GTK settings above, via the gtk3 platform theme plugin

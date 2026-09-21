@@ -47,6 +47,8 @@
     lazygit
     slurp
     grim
+    wf-recorder
+    xdg-user-dirs
     grimblast
     github-cli
     fd

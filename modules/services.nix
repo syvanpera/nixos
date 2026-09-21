@@ -41,6 +41,22 @@ in
     };
   };
 
+  # Generates ~/.config/user-dirs.dirs from /etc/xdg/user-dirs.defaults. The
+  # package ships its own unit, but a unit that merely exists is never started --
+  # it needs something to want it, which is what this is.
+  #
+  # Oneshot: it writes the file and exits. Re-running is how a change to the
+  # defaults reaches an account that already has the file.
+  systemd.user.services.xdg-user-dirs-update = {
+    enable = true;
+    description = "Create the XDG user directories";
+    wantedBy = [ "graphical-session.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = lib.getExe' pkgs.xdg-user-dirs "xdg-user-dirs-update";
+    };
+  };
+
   # Night light. hyprsunset applies a colour temperature to the whole output and
   # is controlled at runtime through hyprctl, which talks to a socket that only
   # exists while the daemon does -- so it runs from login rather than being

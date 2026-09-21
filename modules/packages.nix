@@ -40,6 +40,8 @@
     claude-code
     mcp-nixos
     hyprmoncfg
+    hyprsunset
+    libnotify
     delta
     hunk
     lazygit

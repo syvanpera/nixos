@@ -3,6 +3,22 @@
 
 let
   awww = inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww;
+
+  wl-paste = lib.getExe' pkgs.wl-clipboard "wl-paste";
+  cliphist = lib.getExe pkgs.cliphist;
+
+  # A password manager marks its clipboard offer with x-kde-passwordManagerHint.
+  # Without this check every password copied would land in ~/.cache/cliphist/db
+  # in plain text, and stay there for 750 copies; cliphist 0.7.0 has no ignore
+  # of its own, so the filter has to sit in front of it.
+  #
+  # wl-paste runs this once per offer, and by then the offer being asked about is
+  # the new one -- so --list-types describes the thing about to be stored.
+  storeUnlessSecret = pkgs.writeShellScript "cliphist-store-text" ''
+    ${wl-paste} --list-types | ${lib.getExe pkgs.gnugrep} -q x-kde-passwordManagerHint && exit 0
+
+    exec ${cliphist} store
+  '';
 in
 {
   systemd.user.services.awww-daemon = {
@@ -22,6 +38,46 @@ in
         # Leading `-` because a machine that has never had a wallpaper set has
         # nothing to restore, and that is not a failed start.
         ExecStartPost = "-${lib.getExe' awww "awww"} restore";
+    };
+  };
+
+  # Clipboard history. cliphist is a store, not a daemon: nothing is ever
+  # recorded unless wl-paste watches the selection and feeds it, so this has to
+  # be a session service. History collected only while a launcher is open would
+  # be no history at all.
+  #
+  # Two watchers rather than one bare `wl-paste --watch`, which is how cliphist's
+  # own README splits it: one per type, so a copied image does not also arrive as
+  # whatever text the source offers alongside it.
+  systemd.user.services.cliphist-text = {
+    enable = true;
+    description = "Record copied text in the clipboard history";
+    partOf = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    unitConfig.ConditionEnvironment = "WAYLAND_DISPLAY";
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${wl-paste} --type text --watch ${storeUnlessSecret}";
+      Slice = "session.slice";
+      Restart = "on-failure";
+    };
+  };
+
+  # No secret filter on this one: a password manager offers text, and an image
+  # cannot carry the hint in a way worth a process per copy.
+  systemd.user.services.cliphist-image = {
+    enable = true;
+    description = "Record copied images in the clipboard history";
+    partOf = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    unitConfig.ConditionEnvironment = "WAYLAND_DISPLAY";
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${wl-paste} --type image --watch ${cliphist} store";
+      Slice = "session.slice";
+      Restart = "on-failure";
     };
   };
 

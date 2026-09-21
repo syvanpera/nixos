@@ -22,6 +22,13 @@
   # on it, since nouveau cannot do atomic modesetting on Ada Lovelace.
   boot.blacklistedKernelModules = [ "nouveau" ];
 
+  # Dropping nouveau also drops its runtime power management: an unbound PCI
+  # device defaults to power/control=on, so the card would sit in D0 forever.
+  # Put it back on auto and it suspends to D3cold on its own.
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", ATTR{power/control}="auto"
+  '';
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;

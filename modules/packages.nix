@@ -41,6 +41,7 @@
     mcp-nixos
     hyprmoncfg
     hyprsunset
+    hyprpicker
     libnotify
     delta
     hunk

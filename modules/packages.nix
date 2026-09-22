@@ -62,6 +62,7 @@
     cliphist
     qt6.qtimageformats
     nautilus
+    obsidian
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww

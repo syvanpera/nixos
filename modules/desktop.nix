@@ -19,6 +19,24 @@ let
   # The logical size. The display is 2560x1600 at scale 1.6, and the compositor
   # scales the cursor with everything else, so this stays at the usual 24.
   cursorSize = 24;
+
+  # GTK3 has no notion of "dark mode" on its own -- a dark GTK3 app is one
+  # running a dark named theme out of <XDG_DATA_DIRS>/themes. Nothing here set
+  # gtk-theme-name before, so every GTK3 app fell back to Adwaita, i.e. light.
+  #
+  # The catppuccin/nix NixOS module does not cover this: its gtk port only
+  # handles Papirus icons, and only under GNOME/GDM. So the theme is built
+  # here, from nixpkgs.
+  gtkTheme = pkgs.catppuccin-gtk.override {
+    variant = "mocha";
+    accents = [ "mauve" ];
+  };
+
+  # The directory name build.py emits, which is what gtk-theme-name has to
+  # match. nixpkgs patches out upstream's "+default" suffix, so this is bare
+  # when no tweaks are passed -- check `ls $out/share/themes` before changing
+  # the override rather than trusting the upstream README.
+  gtkThemeName = "catppuccin-mocha-mauve-standard";
 in
 {
   programs.hyprland = {
@@ -85,9 +103,10 @@ in
   services.gvfs.enable = true;
 
   # Kept here rather than in packages.nix: these aren't tools to use, they're
-  # only in the system profile because that's where SDDM looks for themes and
-  # where XCURSOR_PATH already points for cursors.
-  environment.systemPackages = [ sddm-astronaut pkgs.bibata-cursors ];
+  # only in the system profile because that's where SDDM looks for themes,
+  # where XCURSOR_PATH already points for cursors, and where GTK looks for
+  # themes -- /run/current-system/sw/share is the tail of XDG_DATA_DIRS.
+  environment.systemPackages = [ sddm-astronaut pkgs.bibata-cursors gtkTheme ];
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -125,9 +144,15 @@ in
   programs.dconf.profiles.user.databases = [
     {
       settings."org/gnome/desktop/interface" = {
+        gtk-theme = gtkThemeName;
         icon-theme = "MoreWaita";
         cursor-theme = cursorTheme;
         cursor-size = lib.gvariant.mkInt32 cursorSize;
+
+        # Separate knob from gtk-theme, and the only one libadwaita listens to:
+        # GTK4 apps built on it (Nautilus) ignore a named theme entirely and
+        # pick light or dark from here.
+        color-scheme = "prefer-dark";
       };
     }
   ];
@@ -138,15 +163,19 @@ in
   environment.etc = {
     "xdg/gtk-3.0/settings.ini".text = ''
       [Settings]
+      gtk-theme-name=${gtkThemeName}
       gtk-icon-theme-name=MoreWaita
       gtk-cursor-theme-name=${cursorTheme}
       gtk-cursor-theme-size=${toString cursorSize}
+      gtk-application-prefer-dark-theme=1
     '';
     "xdg/gtk-4.0/settings.ini".text = ''
       [Settings]
+      gtk-theme-name=${gtkThemeName}
       gtk-icon-theme-name=MoreWaita
       gtk-cursor-theme-name=${cursorTheme}
       gtk-cursor-theme-size=${toString cursorSize}
+      gtk-application-prefer-dark-theme=1
     '';
 
     # Where the XDG user directories point. Nothing on this machine defined them

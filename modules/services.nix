@@ -127,10 +127,6 @@ in
   # load-bearing: Restart=on-failure means a crash does not silently leave the
   # session with no authentication agent, and the journal gets the output without
   # wrapping anything in systemd-cat.
-  #
-  # The config path is the working copy on purpose -- this shell is developed in
-  # place. `-p` is not optional: ~/.config/quickshell holds an older copy and a
-  # bare quickshell would load that one.
   systemd.user.services.kuori = {
     enable = true;
     description = "kuori desktop shell";
@@ -140,7 +136,7 @@ in
     unitConfig.ConditionEnvironment = "WAYLAND_DISPLAY";
     serviceConfig = {
       Type = "simple";
-      ExecStart = "${lib.getExe' pkgs.quickshell "quickshell"} -p /home/tuomo/work/personal/kuori";
+      ExecStart = "${lib.getExe' pkgs.quickshell "quickshell"} -p %h/.config/kuori";
 
       # systemd hands a unit a minimal PATH -- coreutils, findutils, grep, sed,
       # systemd -- and this one inherits nothing from the session. Started from

@@ -129,12 +129,10 @@ it can still reach D3cold. To actually use the card, remove both and set up
 `hardware.nvidia` with PRIME offload.
 
 **The desktop shell runs from a working copy.** The `kuori` user unit starts
-quickshell against `/home/tuomo/work/personal/kuori`, a path outside this
+quickshell against `~/.config/kuori`, a path outside this
 repo, because the shell is developed in place. The unit fails if that
 checkout is missing — and since the shell is also the polkit agent, that
-means no authentication prompts in the session either. The `-p` flag is
-load-bearing: `~/.config/quickshell` holds an older copy that a bare
-`quickshell` would pick up instead.
+means no authentication prompts in the session either.
 
 **Input synthesis is off by default.** `ydotoold` is dropped from
 `multi-user.target`, so anything using ydotool needs an explicit

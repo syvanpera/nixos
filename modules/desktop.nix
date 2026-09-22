@@ -81,6 +81,9 @@ in
     defaultSession = "hyprland-uwsm";
   };
 
+  # Needed for Nautilus to support some virtual filesystems
+  services.gvfs.enable = true;
+
   # Kept here rather than in packages.nix: these aren't tools to use, they're
   # only in the system profile because that's where SDDM looks for themes and
   # where XCURSOR_PATH already points for cursors.

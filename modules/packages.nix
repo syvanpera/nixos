@@ -61,6 +61,7 @@
     wl-clipboard
     cliphist
     qt6.qtimageformats
+    nautilus
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww

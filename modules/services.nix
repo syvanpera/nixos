@@ -155,6 +155,37 @@ in
     };
   };
 
+  # kuori's calendar: scripts/kuori-calendar fetches every account's events
+  # into ~/.cache/kuori/calendar.json, which the clock panel reads and nothing
+  # else. A unit of its own rather than a process in the shell, so the OAuth
+  # tokens never pass through QML and a shell restart fetches nothing.
+  #
+  # StateDirectory and CacheDirectory are where the script looks first -- it
+  # reads $STATE_DIRECTORY and $CACHE_DIRECTORY -- and name the same
+  # ~/.local/state/kuori and ~/.cache/kuori it falls back to from a terminal.
+  # The shell also starts this directly when the tab opens on a stale file.
+  systemd.user.services.kuori-calendar = {
+    description = "Sync Google Calendar events for kuori";
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${lib.getExe pkgs.python3} %h/.config/kuori/scripts/kuori-calendar sync";
+      StateDirectory = "kuori";
+      CacheDirectory = "kuori";
+      Slice = "session.slice";
+    };
+  };
+
+  # Every 15 minutes, and once shortly after login. A run that fails offline
+  # just leaves the last file in place until the next one.
+  systemd.user.timers.kuori-calendar = {
+    description = "Sync Google Calendar events for kuori every 15 minutes";
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnStartupSec = "1min";
+      OnUnitActiveSec = "15min";
+    };
+  };
+
   # The lock screen's two PAM services. kuori asks both at once, one conversation
   # each, so a finger on the sensor and a typed password are both answers to the
   # same lock. One stack cannot do that: pam_fprintd waits for a finger -- up to

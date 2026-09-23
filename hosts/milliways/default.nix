@@ -34,12 +34,7 @@
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # LUKS: the installer puts the root device's boot.initrd.luks.devices entry
-  # in hardware-configuration.nix, but any other encrypted partition (swap) goes
-  # into /etc/nixos/configuration.nix. Copy those lines here as they are.
-  # boot.initrd.luks.devices."luks-<uuid>".device = "/dev/disk/by-uuid/<uuid>";
+  boot.initrd.luks.devices."luks-092d804b-6569-4774-a75b-17b6aa3cda8e".device = "/dev/disk/by-uuid/092d804b-6569-4774-a75b-17b6aa3cda8e";
 
-  # Copy the value from the installer's /etc/nixos/configuration.nix -- it is the
-  # release this machine was installed with, not tuxedo's.
   system.stateVersion = "26.05"; # Did you read the comment?
 }

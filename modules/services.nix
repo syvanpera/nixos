@@ -154,4 +154,21 @@ in
       Restart = "on-failure";
     };
   };
+
+  # The lock screen's two PAM services. kuori asks both at once, one conversation
+  # each, so a finger on the sensor and a typed password are both answers to the
+  # same lock. One stack cannot do that: pam_fprintd waits for a finger -- up to
+  # 30 seconds and three tries -- before pam_unix is ever asked, so a password
+  # typed first would sit there unread.
+  #
+  # Declared rather than borrowed from /etc/pam.d/swaylock, which has both modules
+  # in one stack for exactly the reason above, and belongs to another program.
+  security.pam.services.kuori = {
+    fprintAuth = false;
+  };
+
+  security.pam.services.kuori-fingerprint = {
+    unixAuth = false;
+    fprintAuth = true;
+  };
 }

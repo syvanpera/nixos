@@ -1,8 +1,8 @@
 # Systemd services
-{ lib, pkgs, inputs, ... }:
+{ lib, pkgs, ... }:
 
 let
-  awww = inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww;
+  awww = pkgs.awww;
 
   wl-paste = lib.getExe' pkgs.wl-clipboard "wl-paste";
   cliphist = lib.getExe pkgs.cliphist;

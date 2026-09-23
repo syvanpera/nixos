@@ -2,6 +2,9 @@
 # Search for more at https://search.nixos.org/
 { pkgs, inputs, ... }:
 
+let
+  llm-agents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
+in
 {
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -37,7 +40,6 @@
     uv
     lua-language-server
     stylua
-    claude-code
     mcp-nixos
     hyprmoncfg
     hyprsunset
@@ -63,9 +65,14 @@
     qt6.qtimageformats
     nautilus
     obsidian
+    awww
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
-    inputs.awww.packages.${pkgs.stdenv.hostPlatform.system}.awww
     inputs.workmux.packages.${pkgs.stdenv.hostPlatform.system}.default
+
+    llm-agents.claude-code
+    llm-agents.opencode
+    llm-agents.pi
   ];
 }
+

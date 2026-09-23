@@ -36,7 +36,7 @@ in
     bluetui
     unzip
     nodejs
-    python3
+    (python3.withPackages (ps: [ ps.jeepney ]))
     uv
     lua-language-server
     stylua

@@ -1,5 +1,5 @@
 # Host: tuxedo (Intel laptop, systemd-boot, ext4)
-{ ... }:
+{ pkgs, ... }:
 
 {
   imports = [
@@ -28,6 +28,17 @@
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="pci", ATTR{vendor}=="0x10de", ATTR{class}=="0x030000", ATTR{power/control}="auto"
   '';
+
+  # Hardware video encoding on the Intel iGPU, which is what /dev/dri/renderD128
+  # is on this machine. The driver has to be here rather than in
+  # environment.systemPackages: libva looks in /run/opengl-driver/lib/dri, and
+  # only hardware.graphics.extraPackages puts anything there. Installed the other
+  # way it is present on disk and invisible to every program that wants it.
+  #
+  # wf-recorder asks for h264_vaapi and **exits** if the connection fails rather
+  # than falling back, so without this a recording does not merely run slowly --
+  # it does not happen.
+  hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;

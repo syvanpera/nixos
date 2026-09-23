@@ -14,6 +14,19 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # Home network hosts
+  networking.hosts = {
+    "10.0.0.1" = [ "moria" ];
+    "10.0.0.4" = [ "unifi" ];
+    "10.0.0.10" = [ "pve" ];
+    "10.0.0.11" = [ "hass" ];
+    "10.0.0.12" = [ "zigbee2mqtt" ];
+    "10.0.0.13" = [ "mqtt" ];
+    "10.0.0.14" = [ "mariadb" ];
+    "10.0.0.17" = [ "vault" ];
+    "10.0.0.20" = [ "kuunappi" ];
+  };
+
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary

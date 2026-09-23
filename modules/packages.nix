@@ -66,9 +66,11 @@ in
     nautilus
     obsidian
     awww
+    slack
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.workmux.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
     llm-agents.claude-code
     llm-agents.opencode

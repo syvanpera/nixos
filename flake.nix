@@ -14,9 +14,12 @@
 
     workmux.url = "github:raine/workmux";
     workmux.inputs.nixpkgs.follows = "nixpkgs";
+
+    zen-browser.url = "github:0xc000022070/zen-browser-flake";
+    zen-browser.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, apple-fonts, aven, llm-agents, workmux, ... }@inputs: {
+  outputs = { self, nixpkgs, apple-fonts, aven, llm-agents, workmux, zen-browser, ... }@inputs: {
     # Build/switch with: sudo nixos-rebuild switch --flake .#<host>
     nixosConfigurations = {
       tuxedo = nixpkgs.lib.nixosSystem {

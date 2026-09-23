@@ -21,6 +21,14 @@
 
   networking.hostName = "milliways";
 
+  # A "Framework Speakers" PipeWire sink that runs the speakers through bass
+  # enhancement, loudness compensation and EQ; the raw speaker sink is hidden.
+  # Leave the speakers at 100% -- the volumes compound -- and re-select the
+  # default output if audio doesn't move over on its own. The raw device name
+  # comes from the nixos-hardware module; if the sink doesn't appear, check it
+  # with `pw-dump | grep -C 20 pci-0000` and set rawDeviceName here.
+  hardware.framework.laptop13.audioEnhancement.enable = true;
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;

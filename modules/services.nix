@@ -4,6 +4,24 @@
 let
   awww = pkgs.awww;
 
+  # The daemon starts with no wallpaper -- it shows black until something tells
+  # it what to display -- and it already keeps its own cache of the last image
+  # per output, so restoring is its job rather than the shell's.
+  #
+  # It has to be asked once it is listening, and with Type=simple ExecStartPost
+  # runs the moment the process forks: a bare `awww restore` there reached a
+  # daemon with no socket yet and failed with "Broken pipe", leaving every screen
+  # black after each restart. `awww query` answers only once the daemon does, so
+  # wait on that -- a tenth of a second in practice, five at the very most.
+  awwwRestore = pkgs.writeShellScript "awww-restore" ''
+    for _ in {1..100}; do
+      ${lib.getExe' awww "awww"} query >/dev/null 2>&1 && break
+      ${lib.getExe' pkgs.coreutils "sleep"} 0.05
+    done
+
+    exec ${lib.getExe' awww "awww"} restore
+  '';
+
   wl-paste = lib.getExe' pkgs.wl-clipboard "wl-paste";
   cliphist = lib.getExe pkgs.cliphist;
 
@@ -30,14 +48,9 @@ in
         Type = "simple";
         ExecStart = lib.getExe' awww "awww-daemon";
 
-        # The daemon starts with no wallpaper -- it shows black until something
-        # tells it what to display -- and it already keeps its own cache of the
-        # last image per output, so restoring is its job rather than the shell's.
-        # It answers as soon as the process is up, so no waiting is needed here.
-        #
-        # Leading `-` because a machine that has never had a wallpaper set has
-        # nothing to restore, and that is not a failed start.
-        ExecStartPost = "-${lib.getExe' awww "awww"} restore";
+        # See awwwRestore above. Leading `-` because a machine that has never had
+        # a wallpaper set has nothing to restore, and that is not a failed start.
+        ExecStartPost = "-${awwwRestore}";
     };
   };
 

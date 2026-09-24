@@ -67,6 +67,13 @@ in
     obsidian
     awww
     slack
+    go
+    gopls
+    typescript-language-server
+    vscode-json-languageserver
+    yaml-language-server
+    tailwindcss-language-server
+    biome
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.superfile.packages.${pkgs.stdenv.hostPlatform.system}.default

@@ -69,6 +69,7 @@ in
     slack
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.superfile.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.workmux.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 

@@ -15,6 +15,9 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
+    superfile.url = "github:yorukot/superfile";
+    superfile.inputs.nixpkgs.follows = "nixpkgs";
+
     workmux.url = "github:raine/workmux";
     workmux.inputs.nixpkgs.follows = "nixpkgs";
 

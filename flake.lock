@@ -257,11 +257,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1790251912,
-        "narHash": "sha256-+1O2TNVMw3upTjT73fdlT6YsjtouphtV0tJFTybzqqE=",
+        "lastModified": 1790271393,
+        "narHash": "sha256-bibAOq2mYOE+QA9IZqBUlkU488Mp1OOIQ5nOmcKJqmY=",
         "owner": "syvanpera",
         "repo": "kuori",
-        "rev": "383a7ce146f4eb3f24b84054fe7e754051268321",
+        "rev": "d4b5216884b63e44ac9f26d72fd47142dd836770",
         "type": "github"
       },
       "original": {

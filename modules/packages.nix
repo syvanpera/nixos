@@ -64,6 +64,7 @@ in
     yaml-language-server
     tailwindcss-language-server
     biome
+    libnotify
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.superfile.packages.${pkgs.stdenv.hostPlatform.system}.default

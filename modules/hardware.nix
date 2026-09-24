@@ -37,6 +37,9 @@
 
   services.upower.enable = true;
 
+  # Firmware updates from LVFS: `fwupdmgr refresh && fwupdmgr update`.
+  services.fwupd.enable = true;
+
   services.keyd = {
     enable = true;
     keyboards = {

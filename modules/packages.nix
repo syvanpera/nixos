@@ -26,30 +26,24 @@ in
     bat
     ripgrep
     jq
-    brightnessctl
     zed-editor
     zoxide
     atuin
     bluetui
     unzip
     nodejs
-    (python3.withPackages (ps: [ ps.jeepney ]))
     uv
     lua-language-server
     stylua
     mcp-nixos
     hyprmoncfg
     hyprsunset
-    hyprpicker
-    libnotify
     delta
     hunk
     lazygit
     slurp
     grim
-    wf-recorder
     xdg-user-dirs
-    grimblast
     github-cli
     fd
     sesh

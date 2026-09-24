@@ -4,7 +4,7 @@
 let
   # embeddedTheme picks which Themes/<name>.conf the theme's metadata.desktop
   # points at. Variants ship in the same package; see Themes/ upstream.
-  sddm-astronaut = pkgs.sddm-astronaut.override { embeddedTheme = "pixel_sakura"; };
+  sddm-astronaut = pkgs.sddm-astronaut.override { embeddedTheme = "hyprland_kath"; };
 
   # Hyprland draws its own built-in cursor unless it is pointed at a theme, and
   # the name has to match a directory under one of the XCURSOR_PATH entries --

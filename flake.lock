@@ -259,16 +259,15 @@
       "locked": {
         "lastModified": 1790251912,
         "narHash": "sha256-+1O2TNVMw3upTjT73fdlT6YsjtouphtV0tJFTybzqqE=",
-        "ref": "nix-flake",
+        "owner": "syvanpera",
+        "repo": "kuori",
         "rev": "383a7ce146f4eb3f24b84054fe7e754051268321",
-        "revCount": 141,
-        "type": "git",
-        "url": "file:///home/tuomo/work/personal/kuori"
+        "type": "github"
       },
       "original": {
-        "ref": "nix-flake",
-        "type": "git",
-        "url": "file:///home/tuomo/work/personal/kuori"
+        "owner": "syvanpera",
+        "repo": "kuori",
+        "type": "github"
       }
     },
     "llm-agents": {

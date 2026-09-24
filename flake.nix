@@ -10,9 +10,8 @@
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
     apple-fonts.inputs.nixpkgs.follows = "nixpkgs";
 
-    # The desktop shell. A local branch while its flake is being built;
-    # github:syvanpera/kuori once that is merged.
-    kuori.url = "git+file:///home/tuomo/work/personal/kuori?ref=nix-flake";
+    # The desktop shell.
+    kuori.url = "github:syvanpera/kuori";
     kuori.inputs.nixpkgs.follows = "nixpkgs";
 
     aven.url = "github:raine/aven";

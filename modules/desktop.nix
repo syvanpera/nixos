@@ -121,9 +121,6 @@ in
     pkgs.nerd-fonts.ubuntu
     pkgs.nerd-fonts.ubuntu-mono
     pkgs.nerd-fonts.ubuntu-sans
-    pkgs.material-symbols
-
-    (pkgs.google-fonts.override { fonts = [ "Manrope" ]; })
 
     inputs.apple-fonts.packages.${pkgs.stdenv.hostPlatform.system}.sf-pro-nerd
   ];

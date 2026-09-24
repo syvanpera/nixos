@@ -10,6 +10,11 @@
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
     apple-fonts.inputs.nixpkgs.follows = "nixpkgs";
 
+    # The desktop shell. A local branch while its flake is being built;
+    # github:syvanpera/kuori once that is merged.
+    kuori.url = "git+file:///home/tuomo/work/personal/kuori?ref=nix-flake";
+    kuori.inputs.nixpkgs.follows = "nixpkgs";
+
     aven.url = "github:raine/aven";
     aven.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -34,13 +39,19 @@
       tuxedo = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
 
-        modules = [ ./hosts/tuxedo ];
+        modules = [
+          inputs.kuori.nixosModules.default
+          ./hosts/tuxedo
+        ];
       };
 
       milliways = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
 
-        modules = [ ./hosts/milliways ];
+        modules = [
+          inputs.kuori.nixosModules.default
+          ./hosts/milliways
+        ];
       };
     };
   };

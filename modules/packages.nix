@@ -20,7 +20,6 @@ in
     fsel
     ghostty
     chromium
-    quickshell
     tree-sitter
     tmux
     starship
@@ -29,8 +28,6 @@ in
     jq
     brightnessctl
     zed-editor
-    kdePackages.qtdeclarative
-    kdePackages.qtmultimedia
     zoxide
     atuin
     bluetui
@@ -62,7 +59,6 @@ in
     imagemagick
     wl-clipboard
     cliphist
-    qt6.qtimageformats
     nautilus
     obsidian
     awww

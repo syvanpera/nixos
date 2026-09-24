@@ -250,6 +250,27 @@
         "type": "github"
       }
     },
+    "kuori": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790251912,
+        "narHash": "sha256-+1O2TNVMw3upTjT73fdlT6YsjtouphtV0tJFTybzqqE=",
+        "ref": "nix-flake",
+        "rev": "383a7ce146f4eb3f24b84054fe7e754051268321",
+        "revCount": 141,
+        "type": "git",
+        "url": "file:///home/tuomo/work/personal/kuori"
+      },
+      "original": {
+        "ref": "nix-flake",
+        "type": "git",
+        "url": "file:///home/tuomo/work/personal/kuori"
+      }
+    },
     "llm-agents": {
       "inputs": {
         "bun2nix": "bun2nix",
@@ -340,6 +361,7 @@
       "inputs": {
         "apple-fonts": "apple-fonts",
         "aven": "aven",
+        "kuori": "kuori",
         "llm-agents": "llm-agents",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",

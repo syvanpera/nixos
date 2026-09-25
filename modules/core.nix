@@ -14,6 +14,17 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # With the dock's Ethernet and Wi-Fi on the same subnet, Linux by default
+  # answers ARP for any local IP on any interface, so the router can learn the
+  # Ethernet IP under the Wi-Fi MAC. Every Wi-Fi roam or switch-off then drops
+  # the wired connection until the router re-ARPs (seconds up to ~45 s).
+  # Only answer ARP for addresses on the receiving interface, and source ARP
+  # requests from the outgoing interface's own address.
+  boot.kernel.sysctl = {
+    "net.ipv4.conf.all.arp_ignore" = 1;
+    "net.ipv4.conf.all.arp_announce" = 2;
+  };
+
   # Home network hosts
   networking.hosts = {
     "10.0.0.1" = [ "moria" ];

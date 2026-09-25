@@ -9,6 +9,16 @@ in
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # nixpkgs builds voxtype CPU-only, and whisper on the CPU takes most of a
+  # clip's own length to transcribe it. With Vulkan it runs on the iGPU. An
+  # overlay rather than a local override so the user service in services.nix
+  # gets the same build.
+  nixpkgs.overlays = [
+    (final: prev: {
+      voxtype = prev.voxtype.override { vulkanSupport = true; };
+    })
+  ];
+
   environment.systemPackages = with pkgs; [
     gcc
     git
@@ -65,6 +75,7 @@ in
     tailwindcss-language-server
     biome
     libnotify
+    voxtype
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.superfile.packages.${pkgs.stdenv.hostPlatform.system}.default

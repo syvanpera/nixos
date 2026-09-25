@@ -133,6 +133,28 @@ in
     };
   };
 
+  # Voice typing. `voxtype record start|stop`, which the Hyprland keybinds run,
+  # only signal the daemon, so nothing is recorded unless this is up.
+  #
+  # The system profile goes on PATH because the daemon shells out: wtype to type
+  # the text, wl-copy as the fallback, and hyprctl for its pre_recording_command
+  # (see ~/.config/voxtype/config.toml). A user unit's PATH has none of them.
+  systemd.user.services.voxtype = {
+    enable = true;
+    description = "Push-to-talk voice typing";
+    partOf = [ "graphical-session.target" ];
+    after = [ "graphical-session.target" "pipewire.service" ];
+    wantedBy = [ "graphical-session.target" ];
+    path = [ "/run/current-system/sw" ];
+    unitConfig.ConditionEnvironment = "WAYLAND_DISPLAY";
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${lib.getExe pkgs.voxtype} daemon";
+      Slice = "session.slice";
+      Restart = "on-failure";
+    };
+  };
+
   # The desktop shell, from its own flake (see flake.nix): the user unit, the
   # lock screen's PAM services, its fonts and the calendar timer all live there.
   # What stays in this file is what is useful without it -- the wallpaper, night

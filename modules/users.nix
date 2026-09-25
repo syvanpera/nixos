@@ -9,7 +9,7 @@
     # process running as this user, which is the whole input-synthesis
     # capability, permanently. The ydotool group only opens the daemon's
     # socket, and that daemon is started on demand (see desktop.nix).
-    extraGroups = [ "networkmanager" "wheel" "ydotool" "video" ];
+    extraGroups = [ "networkmanager" "wheel" "input" "ydotool" "video" ];
     packages = with pkgs; [ ];
   };
 }

@@ -75,7 +75,10 @@ in
     tailwindcss-language-server
     biome
     libnotify
+    stow
+    python3
     voxtype
+    wev
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.superfile.packages.${pkgs.stdenv.hostPlatform.system}.default

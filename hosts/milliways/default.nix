@@ -1,5 +1,5 @@
 # Host: milliways (Framework Laptop 13, Ryzen AI 300, systemd-boot, LUKS)
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   imports = [
@@ -39,6 +39,28 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # Skip the systemd-boot menu (hold Space at power-on to reach it).
+  boot.loader.timeout = 0;
+
+  # Graphical LUKS prompt. The systemd initrd hands the passphrase prompt to
+  # Plymouth (the scripted initrd's prompt is text only) and caches the
+  # passphrase, so one entry unlocks both root and swap.
+  boot.initrd.systemd.enable = true;
+
+  boot.plymouth = {
+    enable = true;
+    # The package bundles ~80 themes (~524 MB) unless narrowed to the one in use.
+    theme = "darth_vader";
+    themePackages = [
+      (pkgs.adi1090x-plymouth-themes.override { selected_themes = [ "darth_vader" ]; })
+    ];
+  };
+
+  # Hide kernel and systemd chatter so the splash isn't drawn over text.
+  boot.consoleLogLevel = 3;
+  boot.initrd.verbose = false;
+  boot.kernelParams = [ "quiet" "udev.log_level=3" "systemd.show_status=auto" ];
 
   boot.initrd.luks.devices."luks-092d804b-6569-4774-a75b-17b6aa3cda8e".device = "/dev/disk/by-uuid/092d804b-6569-4774-a75b-17b6aa3cda8e";
 

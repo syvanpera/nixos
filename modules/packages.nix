@@ -67,6 +67,7 @@ in
     obsidian
     awww
     slack
+    telegram-desktop
     go
     gopls
     typescript-language-server
@@ -79,6 +80,10 @@ in
     python3
     voxtype
     wev
+    fastfetch
+    btop
+    imv
+    amberol
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.superfile.packages.${pkgs.stdenv.hostPlatform.system}.default

@@ -84,6 +84,7 @@ in
     btop
     imv
     amberol
+    satty
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.superfile.packages.${pkgs.stdenv.hostPlatform.system}.default

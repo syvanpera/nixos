@@ -85,6 +85,8 @@ in
     imv
     amberol
     satty
+    direnv
+    nix-direnv
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.superfile.packages.${pkgs.stdenv.hostPlatform.system}.default

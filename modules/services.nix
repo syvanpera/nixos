@@ -155,6 +155,74 @@ in
     };
   };
 
+  # Containers for innom's per-project environments. Socket-activated, so
+  # incusd only runs once something talks to it rather than from boot, and
+  # the preseed below is applied every time it starts.
+  #
+  # The dir driver because / is ext4: no loop file to size up front, and the
+  # preseed can be re-applied without tripping over a pool it cannot resize.
+  # Idmapped mounts still work on ext4, which is what sharing a host folder
+  # into a container needs. The root subuid/subgid ranges come from the
+  # module itself.
+  virtualisation.incus = {
+    enable = true;
+    socketActivation = true;
+    preseed = {
+      storage_pools = [
+        {
+          name = "default";
+          driver = "dir";
+        }
+      ];
+      # An explicit subnet rather than "auto", which could land anywhere and
+      # move between preseeds. Kept clear of the home network's 10.0.0.0/24.
+      networks = [
+        {
+          name = "incusbr0";
+          type = "bridge";
+          config = {
+            "ipv4.address" = "10.233.0.1/24";
+            "ipv4.nat" = "true";
+            "ipv6.address" = "none";
+          };
+        }
+      ];
+      profiles = [
+        {
+          name = "default";
+          devices = {
+            eth0 = {
+              name = "eth0";
+              network = "incusbr0";
+              type = "nic";
+            };
+            root = {
+              path = "/";
+              pool = "default";
+              type = "disk";
+            };
+          };
+        }
+      ];
+    };
+  };
+
+  # raw.idmap maps host UID 1000 / GID 100 straight into the container so
+  # files in a shared project folder keep their owner. LXC applies the map
+  # through newuidmap/newgidmap, which only allow IDs listed for root in
+  # /etc/subuid and /etc/subgid, so without these the container refuses to
+  # start. They add to the module's own 1000000 range, not replace it.
+  users.users.root.subUidRanges = [ { startUid = 1000; count = 1; } ];
+  users.users.root.subGidRanges = [ { startGid = 100; count = 1; } ];
+
+  # Incus manages its bridge's rules through nftables and refuses to start
+  # under the iptables backend. The bridges are trusted because the firewall
+  # would otherwise drop the DHCP and DNS requests containers send to them.
+  # incusbr0 serves the default project; incusbr-1000 is the one incus-user
+  # creates for the restricted project of the user with UID 1000.
+  networking.nftables.enable = true;
+  networking.firewall.trustedInterfaces = [ "incusbr0" "incusbr-1000" ];
+
   # The desktop shell, from its own flake (see flake.nix): the user unit, the
   # lock screen's PAM services, its fonts and the calendar timer all live there.
   # What stays in this file is what is useful without it -- the wallpaper, night

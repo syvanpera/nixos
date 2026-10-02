@@ -10,7 +10,9 @@
     apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
     apple-fonts.inputs.nixpkgs.follows = "nixpkgs";
 
-    # The desktop shell.
+    herdr.url = "github:herdrdev/herdr";
+    herdr.inputs.nixpkgs.follows = "nixpkgs";
+
     kuori.url = "github:syvanpera/kuori";
     kuori.inputs.nixpkgs.follows = "nixpkgs";
 

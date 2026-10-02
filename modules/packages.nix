@@ -85,10 +85,14 @@ in
     imv
     amberol
     satty
-    direnv
-    nix-direnv
+    foliate
+    eilmeldung
+    circumflex
+    zathura
+    glow
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.superfile.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.workmux.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.yazi.packages.${pkgs.stdenv.hostPlatform.system}.default
@@ -97,6 +101,7 @@ in
     llm-agents.claude-code
     llm-agents.opencode
     llm-agents.pi
+    llm-agents.t3code
+    llm-agents.t3code-desktop
   ];
 }
-

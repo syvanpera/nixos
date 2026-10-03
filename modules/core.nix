@@ -1,15 +1,9 @@
-# Nix daemon settings, networking, locale and shell defaults.
-{ lib, ... }:
+# Networking and other machine-level defaults for the hosts. Nix, locale and
+# shell settings shared with the container image live in common.nix.
+{ ... }:
 
 {
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # Collect garbage weekly so old generations do not pile up.
-  nix.gc = {
-    automatic = true;
-    dates = "weekly";
-    options = "--delete-older-than 2d";
-  };
+  imports = [ ./common.nix ];
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -51,35 +45,9 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
-  # Set your time zone.
-  time.timeZone = "Europe/Helsinki";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "fi_FI.UTF-8";
-    LC_IDENTIFICATION = "fi_FI.UTF-8";
-    LC_MEASUREMENT = "fi_FI.UTF-8";
-    LC_MONETARY = "fi_FI.UTF-8";
-    LC_NAME = "fi_FI.UTF-8";
-    LC_NUMERIC = "fi_FI.UTF-8";
-    LC_PAPER = "fi_FI.UTF-8";
-    LC_TELEPHONE = "fi_FI.UTF-8";
-    LC_TIME = "fi_FI.UTF-8";
-  };
-
-  # Configure console keymap
-  console.keyMap = "fi";
-
   # Never let uv download its own CPython: python-build-standalone binaries
   # expect /lib64/ld-linux-x86-64.so.2, which does not exist on NixOS.
   environment.variables.UV_PYTHON_DOWNLOADS = "never";
-
-  # clear all default shell aliases
-  environment.shellAliases = lib.mkForce { };
-
-  programs.fish.enable = true;
 
   services.power-profiles-daemon.enable = true;
 

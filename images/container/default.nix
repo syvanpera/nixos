@@ -45,6 +45,10 @@
   # key above, so sudo cannot ask for one.
   security.sudo.wheelNeedsPassword = false;
 
+  # Lets `nixos-rebuild --target-host` copy unsigned paths built on the host
+  # into the store. Grants nothing new: wheel already has passwordless sudo.
+  nix.settings.trusted-users = [ "@wheel" ];
+
   # sshd is enabled and socket-activated by the LXC module. Keys only, and no
   # root logins, since the module gives root an empty password.
   services.openssh.settings = {

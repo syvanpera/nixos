@@ -19,6 +19,10 @@
   # Incus gives it, its own name.
   networking.hostName = "";
 
+  # The store path name otherwise falls back to the hostname, which reads as
+  # "unnamed" when it is empty.
+  system.name = "nixos-container";
+
   # The LXC module copies a full nixpkgs checkout into the image as a channel
   # and a generated configuration.nix into /etc/nixos. Neither is needed: the
   # flake's nixpkgs is already pinned in the registry and NIX_PATH, and the

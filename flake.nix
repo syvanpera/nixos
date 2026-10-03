@@ -54,6 +54,28 @@
           ./hosts/milliways
         ];
       };
+
+      # Not a host: the system inside the Incus container image below.
+      container = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+
+        modules = [
+          ./images/container
+        ];
+      };
     };
+
+    # Build and import with:
+    #   nix build .#incus-image
+    #   incus image import result/metadata.tar.xz result/rootfs.squashfs --alias nixos-container
+    #   incus launch nixos-container <name>
+    packages.x86_64-linux.incus-image =
+      let
+        build = self.nixosConfigurations.container.config.system.build;
+      in
+      nixpkgs.legacyPackages.x86_64-linux.linkFarm "incus-image" {
+        "metadata.tar.xz" = "${build.metadata}/tarball/${build.metadata.fileName}.tar.xz";
+        "rootfs.squashfs" = "${build.squashfs}/nixos-lxc-image-x86_64-linux.squashfs";
+      };
   };
 }

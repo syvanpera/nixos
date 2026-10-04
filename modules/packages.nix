@@ -104,7 +104,7 @@ in
     llm-agents.pi
     llm-agents.sidecar
     llm-agents.td
-    llm-agents.t3code
-    llm-agents.t3code-desktop
+    # llm-agents.t3code
+    # llm-agents.t3code-desktop
   ];
 }

@@ -62,6 +62,14 @@
   boot.initrd.verbose = false;
   boot.kernelParams = [ "quiet" "udev.log_level=3" "systemd.show_status=auto" ];
 
+  # The MT7925's Bluetooth drops LE links when btusb autosuspends it, which
+  # makes the MX Master 3S stutter and reconnect every few minutes.
+  # (The Wi-Fi is also kept off 2.4 GHz to avoid coexistence lag, but that's
+  # set on the NetworkManager profile: 802-11-wireless.band a.)
+  boot.extraModprobeConfig = ''
+    options btusb enable_autosuspend=0
+  '';
+
   boot.initrd.luks.devices."luks-092d804b-6569-4774-a75b-17b6aa3cda8e".device = "/dev/disk/by-uuid/092d804b-6569-4774-a75b-17b6aa3cda8e";
 
   system.stateVersion = "26.05"; # Did you read the comment?

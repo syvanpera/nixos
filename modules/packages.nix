@@ -49,7 +49,6 @@ in
     hyprmoncfg
     hyprsunset
     delta
-    hunk
     lazygit
     slurp
     grim
@@ -91,6 +90,10 @@ in
     zathura
     glow
     taplo
+    gimp
+    appimage-run
+    fzf
+    pet
 
     inputs.aven.packages.${pkgs.stdenv.hostPlatform.system}.default
     inputs.herdr.packages.${pkgs.stdenv.hostPlatform.system}.default
@@ -100,10 +103,12 @@ in
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
 
     llm-agents.claude-code
+    llm-agents.hunk
     llm-agents.opencode
     llm-agents.pi
     llm-agents.sidecar
     llm-agents.td
+    llm-agents.tuicr
     # llm-agents.t3code
     # llm-agents.t3code-desktop
   ];
